@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   try {
     // Validate ticket with CAS server
     const serviceUrl = encodeURIComponent(
-      "http://localhost:3000/api/auth/callback"
+      `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/auth/callback`
     );
     const validationUrl = `https://sso.sun.ac.za/serviceValidate?ticket=${ticket}&service=${serviceUrl}`;
 
