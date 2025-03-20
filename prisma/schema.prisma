@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  fullName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Preferences this user has for others
+  preferences    Preference[] @relation("UserPreferences")
+  
+  // Users who have selected this user as a preference
+  selectedBy     Preference[] @relation("SelectedUser")
+  
+  // Final matches
+  matchesAsUser1 Match[]      @relation("User1")
+  matchesAsUser2 Match[]      @relation("User2")
+}
+
+model Preference {
+  id        String   @id @default(cuid())
+  rank      Int      // Lower number means higher preference
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The user who has this preference
+  userId    String
+  user      User     @relation("UserPreferences", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // The user who is preferred
+  selectedId String
+  selected   User     @relation("SelectedUser", fields: [selectedId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, selectedId])
+  @@index([userId, rank])
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  score     Int      // Match score based on mutual preferences
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The two matched users
+  user1Id   String
+  user1     User     @relation("User1", fields: [user1Id], references: [id], onDelete: Cascade)
+  
+  user2Id   String
+  user2     User     @relation("User2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+}
+
