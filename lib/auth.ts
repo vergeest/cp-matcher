@@ -10,7 +10,7 @@ const JWT_SECRET = new TextEncoder().encode(
 
 // CAS server URL
 export const CAS_SERVER_URL = "https://sso.sun.ac.za";
-export const SERVICE_URL = `https://${process.env.VERCEL_URL}/api/auth/callback`;
+export const SERVICE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/auth/callback`;
 
 // User type
 export type User = {
