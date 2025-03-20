@@ -10,7 +10,7 @@ const JWT_SECRET = new TextEncoder().encode(
 
 // CAS server URL
 export const CAS_SERVER_URL = "https://sso.sun.ac.za";
-export const SERVICE_URL = "http://localhost:3000/api/auth/callback";
+export const SERVICE_URL = `https://${process.env.VERCEL_URL}/api/auth/callback`;
 
 // User type
 export type User = {
@@ -55,8 +55,7 @@ export function getCasLoginUrl(redirectUrl?: string): string {
 
 // Get CAS logout URL
 export function getCasLogoutUrl(): string {
-  const service = encodeURIComponent("http://localhost:3000");
-  return `${CAS_SERVER_URL}/logout?service=${service}`;
+  return `${CAS_SERVER_URL}/logout?service=${SERVICE_URL}`;
 }
 
 // Middleware to check if user is authenticated
